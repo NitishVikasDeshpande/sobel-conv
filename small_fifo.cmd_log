@@ -1,0 +1,2 @@
+vhdtdtfi -lib work small_fifo.vhd -prj fifo_own -o small_fifo.spl -module small_fifo -template /opt/Xilinx/14.7/ISE_DS/ISE//data/splfile.tft -deleteonerror 
+spl2sym -intstyle ise -family virtex5 small_fifo.spl {/home/nitish/Desktop/fifo own/fifo_own/small_fifo.sym} 
