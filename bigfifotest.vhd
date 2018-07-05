@@ -64,8 +64,27 @@ ARCHITECTURE behavior OF big_fifo_test_new IS
 			fifo1full : out std_logic;
 fifo2full : out std_logic;
 fifo3full : out std_logic;
+testread1 : out std_logic;
+testread2 : out std_logic;
+fifo1_to_fifo2 : out std_ulogic_vector(7 downto 0);
+fifo2_to_fifo3 : out std_ulogic_vector(7 downto 0);
        reset: in std_logic;
-datardy: out std_logic		 );
+datardy: out std_logic;		
+pointer1 : out std_logic_vector( 3 downto 0);
+pointer2 : out std_logic_vector( 3 downto 0);
+pointer3 : out std_logic_vector( 3 downto 0);
+pointer4 : out std_logic_vector( 7 downto 0);
+pointer5 : out std_logic_vector( 7 downto 0);
+pointer6 : out std_logic_vector( 7 downto 0);
+pointer7 : out std_logic_vector( 7 downto 0);
+pointer8 : out std_logic_vector( 7 downto 0);
+pointer9 : out std_logic_vector( 7 downto 0);
+wrpointerf1 : out std_logic_vector( 7 downto 0);
+wrpointerf2 : out std_logic_vector( 7 downto 0);
+wrpointerf3 : out std_logic_vector( 3 downto 0);
+read1ptr : out std_logic_vector( 7 downto 0);
+read2ptr :  out std_logic_vector( 7 downto 0)
+);
     END COMPONENT;
     
    --Inputs
@@ -87,7 +106,25 @@ datardy: out std_logic		 );
 	signal fifo2full :  std_logic;
 	signal fifo3full :  std_logic;
 	signal datardy :std_logic;
-	
+	signal testread1 : std_logic;
+	signal testread2 : std_logic;
+	signal fifo1_to_fifo2 : std_ulogic_vector(7 downto 0);
+	signal fifo2_to_fifo3 : std_ulogic_vector(7 downto 0);
+	signal pointer1 : std_logic_vector( 3 downto 0);
+	signal pointer2 : std_logic_vector( 3 downto 0);
+	signal pointer3 : std_logic_vector( 3 downto 0);
+	signal pointer4 : std_logic_vector( 7 downto 0);
+	signal pointer5 : std_logic_vector( 7 downto 0);
+	signal pointer6 : std_logic_vector( 7 downto 0);
+	signal pointer7 : std_logic_vector( 7 downto 0);
+	signal pointer8 : std_logic_vector( 7 downto 0);
+	signal pointer9 : std_logic_vector( 7 downto 0);
+	signal wrpointerf1 : std_logic_vector( 7 downto 0);
+   signal wrpointerf2 : std_logic_vector( 7 downto 0);
+   signal wrpointerf3 : std_logic_vector( 3 downto 0);
+	signal read1ptr :std_logic_vector( 7 downto 0);
+	signal read2ptr :std_logic_vector( 7 downto 0);
+
     signal i : integer := 0;
    -- Clock period definitions
    constant clock_period : time := 0.01 ns;
@@ -112,8 +149,26 @@ BEGIN
 			 fifo1full => fifo1full,
 			 fifo2full => fifo2full,
 			 fifo3full => fifo3full,
+			 testread1 => testread1,
+			 testread2 => testread2,
+			 fifo1_to_fifo2 => fifo1_to_fifo2,
+          fifo2_to_fifo3 => fifo2_to_fifo3,			 
 			 reset => '0',
-			 datardy => datardy
+			 datardy => datardy,
+			 pointer1 => pointer1,
+			 pointer2 => pointer2,
+			 pointer3 => pointer3,
+			 pointer4 => pointer4,
+			 pointer5 => pointer5,
+			 pointer6 => pointer6,
+			 pointer7 => pointer7,
+			 pointer8 => pointer8,
+			 pointer9 => pointer9,
+			 wrpointerf1 => wrpointerf1 ,
+			 wrpointerf2 => wrpointerf2,
+			 wrpointerf3 => wrpointerf3,
+			 read1ptr => read1ptr,
+			 read2ptr => read2ptr
          );
    -- Clock process definitions
    clock_process :process
@@ -126,15 +181,19 @@ BEGIN
  
    -- Stimulus process
    stim_proc: process
-   begin        
+	begin        
 	   -- hold reset state for 100 ns.
       --std_ulogic_vector(to_unsigned(i, datain'length));
-        for i in 1 to 240 loop
+		for i in 1 to 9 loop
+            datain <= std_ulogic_vector(to_unsigned(i, datain'length));
+            wait for clock_period;
+      end loop;
+        for i in 1 to 150 loop
             datain <= std_ulogic_vector(to_unsigned(i, datain'length));
             wait for clock_period;
       end loop;
 		
-        for i in 1 to 240 loop
+        for i in 1 to 150 loop
             datain <= std_ulogic_vector(to_unsigned(i, datain'length));
             wait for clock_period;
       end loop;
@@ -198,7 +257,10 @@ BEGIN
             datain <= std_ulogic_vector(to_unsigned(i, datain'length));
             wait for clock_period;
       end loop;
-        
+        for i in 241 to 249 loop
+            datain <= std_ulogic_vector(to_unsigned(i, datain'length));
+            wait for clock_period;
+      end loop;
       
       -- insert stimulus here 
       wait;

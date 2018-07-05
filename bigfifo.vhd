@@ -53,7 +53,25 @@ datardy :out std_logic;
 fifo1full : out std_logic;
 fifo2full : out std_logic;
 fifo3full : out std_logic;
-reset : in std_logic
+testread1 : out std_logic;
+testread2 : out std_logic;
+fifo1_to_fifo2 : out std_ulogic_vector(7 downto 0);
+fifo2_to_fifo3 : out std_ulogic_vector(7 downto 0);
+reset : in std_logic;
+pointer1 : out std_logic_vector( 3 downto 0);
+pointer2 : out std_logic_vector( 3 downto 0);
+pointer3 : out std_logic_vector( 3 downto 0);
+pointer4 : out std_logic_vector( 7 downto 0);
+pointer5 : out std_logic_vector( 7 downto 0);
+pointer6 : out std_logic_vector( 7 downto 0);
+pointer7 : out std_logic_vector( 7 downto 0);
+pointer8 : out std_logic_vector( 7 downto 0);
+pointer9 : out std_logic_vector( 7 downto 0);
+wrpointerf1 : out std_logic_vector( 7 downto 0);
+wrpointerf2 : out std_logic_vector( 7 downto 0);
+wrpointerf3 : out std_logic_vector( 3 downto 0);
+read1ptr : out std_logic_vector( 7 downto 0);
+read2ptr :  out std_logic_vector( 7 downto 0)
 );
 
 
@@ -75,7 +93,13 @@ rd2 :in std_logic;
 rd3 :in std_logic;
 rd :in std_logic;
 full :out std_logic;
-empty:out std_logic);
+empty:out std_logic;
+pointer1 : out std_logic_vector(7 downto 0);
+pointer2 : out std_logic_vector(7 downto 0);
+pointer3 : out std_logic_vector(7 downto 0);
+wrpointerf : out std_logic_vector(7 downto 0);
+read1ptr : out std_logic_vector( 7 downto 0)
+);
 end component;
 
 component small_fifo is
@@ -92,7 +116,12 @@ rd2 :in std_logic;
 rd3 :in std_logic;
 --rd :in std_logic;
 full :out std_logic;
-empty:out std_logic);
+empty:out std_logic;
+pointer1 : out std_logic_vector(3 downto 0);
+pointer2 : out std_logic_vector(3 downto 0);
+pointer3 : out std_logic_vector(3 downto 0);
+wrpointerf3 : out std_logic_vector(3 downto 0)
+);
 end component;
 
 signal wr_input : std_ulogic_vector( 7 downto 0);-- better to create a signal for original input instead of directly joining input port to fifo
@@ -137,6 +166,9 @@ signal fifo3_full : std_logic ;
 signal fifo3_empty : std_logic ;
 signal zerobit :std_logic := '0';
 signal datardy_sig : std_logic :='0'; 
+--signal pointerpipe1 : std_logic_vector(4 downto 0);
+--signal pointerpipe2 : std_logic_vector(4 downto 0);
+--signal pointerpipe3 : std_logic_vector(4 downto 0);
 begin
 wr_input <= datain;
 
@@ -153,7 +185,12 @@ rd2 => fifo1_r2,
 rd3 => fifo1_r3,
 rd => fifo1_r,
 full => fifo1_full,
-empty => fifo1_empty
+empty => fifo1_empty,
+pointer1 => pointer7,
+pointer2 => pointer8,
+pointer3 => pointer9,
+wrpointerf => wrpointerf1,
+read1ptr=>read1ptr
 );
 
 FIFO2 : fifo port map(
@@ -169,7 +206,12 @@ rd2 => fifo2_r2,
 rd3 => fifo2_r3,
 rd => fifo2_r,
 full => fifo2_full,
-empty => fifo2_empty
+empty => fifo2_empty,
+pointer1 => pointer4,
+pointer2 => pointer5,
+pointer3 => pointer6,
+wrpointerf => wrpointerf2,
+read1ptr => read2ptr
 );
 
 FIFO3 :small_fifo port map(
@@ -183,7 +225,11 @@ rd1 => fifo3_r1,
 rd2 => fifo3_r2,
 rd3 => fifo3_r3,
 full => fifo3_full,
-empty => fifo3_empty
+empty => fifo3_empty,
+pointer1 => pointer1,
+pointer2 => pointer2,
+pointer3 => pointer3,
+wrpointerf3 => wrpointerf3
 );
 
 process(clock)
@@ -191,9 +237,9 @@ variable flag_fifo1 :std_logic := '0'; --used flags to ensure that the following
 
 begin
 if(clock'event and clock='1' and fifo1_full ='1' and flag_fifo1='0') then
+fifo1_r <= '1';
 wr_enable2 <= '1';
 fifo1full<= '1';--for debug
-fifo1_r <= '1';
 flag_fifo1 := '1';
 end if;
 end process;
@@ -203,9 +249,9 @@ variable flag_fifo2 :std_logic := '0';
 
 begin
 if(clock'event and clock='1' and fifo2_full ='1' and flag_fifo2 ='0') then
+fifo2_r <= '1';
 wr_enable3 <= '1';
 fifo2full<= '1'; -- for debug
-fifo2_r <= '1';
 flag_fifo2 := '1';
 end if;
 end process;
@@ -239,5 +285,9 @@ pixel_6 <= pixel_6_unsigned;
 pixel_7 <= pixel_7_unsigned;
 pixel_8 <= pixel_8_unsigned;
 pixel_9 <= pixel_9_unsigned;
+testread1 <=fifo1_r;
+testread2 <=fifo2_r;
+fifo1_to_fifo2 <= f1_to_f2;
+fifo2_to_fifo3 <= f2_to_f3;
 end Behavioral;
 

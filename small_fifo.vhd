@@ -47,8 +47,12 @@ rd2 :in std_logic;
 rd3 :in std_logic;
 --rd :in std_logic;
 full :out std_logic;
-empty:out std_logic);
-
+empty:out std_logic;
+pointer1 : out std_logic_vector(3 downto 0);
+pointer2 : out std_logic_vector(3 downto 0);
+pointer3 : out std_logic_vector(3 downto 0);
+wrpointerf3 : out std_logic_vector(3 downto 0)
+);
 
 end small_fifo;
 
@@ -63,55 +67,62 @@ signal r3ptr : std_logic_vector(3 downto 0) :="0110";--6
 
 begin
 process(clk) --writing process
+variable writeptrc: std_logic_vector( 3 downto 0) :="0000";
+variable fullvar : std_logic:='0';
 begin
-
 if(clk'event and clk='1' and wr ='1') then
-pix_row(conv_integer(writeptr)) <= datain;
-writeptr <= writeptr+'1';
+pix_row(conv_integer(writeptrc)) <= datain;
+writeptrc := writeptrc+'1';
 end if;
-if(writeptr="1001")then
-full <= '1'; 
-writeptr<="0000";
-else 
-full <= '0';
+if(writeptrc="1001")then
+writeptrc:="0000";
+fullvar:= '1'; 
 end if;
+writeptr<=writeptrc;
+full<=fullvar;
 end process;
 
 process(clk) --reading process 1
+variable r1ptrc: std_logic_vector( 3 downto 0):="0000";
 begin
-if(clk'event and clk ='1' and rd1='1') then
-dataout1 <= pix_row(conv_integer(r1ptr));
-r1ptr<= r1ptr+'1';
+if(clk'event and clk ='0' and rd1='1') then
+dataout1 <= pix_row(conv_integer(r1ptrc));
+r1ptrc:= r1ptrc+'1';
 end if;
-if(r1ptr="1001")then 
-r1ptr<="0000";
+if(r1ptrc="1001")then 
+r1ptrc:="0000";
 end if;
+r1ptr<= r1ptrc;
 end process;
 
 process(clk) --reading process 2
+variable r2ptrc: std_logic_vector( 3 downto 0):="0011";
 begin
-if(clk'event and clk ='1' and rd2='1') then
-dataout2 <= pix_row(conv_integer(r2ptr));
-r2ptr<= r2ptr+'1';
-
+if(clk'event and clk ='0' and rd2='1') then
+dataout2 <= pix_row(conv_integer(r2ptrc));
+r2ptrc:= r2ptrc+'1';
 end if;
-if(r2ptr="1001")then 
-r2ptr<="0000";
+if(r2ptrc="1001")then 
+r2ptrc:="0000";
 end if;
-
+r2ptr<=r2ptrc;
 end process;
 
 process(clk) --reading process 3
+variable r3ptrc: std_logic_vector( 3 downto 0):="0110";
 begin
-if(clk'event and clk ='1' and rd3='1') then
-dataout3 <= pix_row(conv_integer(r3ptr));
-r3ptr<= r3ptr+'1';
+if(clk'event and clk ='0' and rd3='1') then
+dataout3 <= pix_row(conv_integer(r3ptrc));
+r3ptrc:= r3ptrc+'1';
 end if;
-if(r3ptr="1001")then 
-r3ptr<="0000";
+if(r3ptrc="1001")then 
+r3ptrc:="0000";
 end if;
+r3ptr<=r3ptrc;
 end process;
-
-
+pointer1 <= r1ptr;
+pointer2 <= r2ptr;
+pointer3 <= r3ptr;
+wrpointerf3 <= writeptr;
 end Behavioral;
 

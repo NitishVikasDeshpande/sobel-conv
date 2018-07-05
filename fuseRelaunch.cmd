@@ -1,1 +1,1 @@
--intstyle "ise" -incremental -lib "secureip" -o "/home/nitish/Desktop/fifo own/fifo_own/testbench_isim_beh.exe" -prj "/home/nitish/Desktop/fifo own/fifo_own/testbench_beh.prj" "work.testbench" 
+-intstyle "ise" -incremental -lib "secureip" -o "/home/nitish/Desktop/fifo own/fifo_own/big_fifo_test_new_isim_beh.exe" -prj "/home/nitish/Desktop/fifo own/fifo_own/big_fifo_test_new_beh.prj" "work.big_fifo_test_new" 

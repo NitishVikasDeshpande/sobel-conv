@@ -1,0 +1,3 @@
+vhdl work "small_fifo.vhd"
+vhdl work "fifo.vhd"
+vhdl work "bigfifo.vhd"
